@@ -27,7 +27,7 @@ int main() {
     std::fstream file("/media/mmcblk0p1/vehicle.txt");
 
     int id;
-    int pwn;
+    int pwm;
     int period;
     std::string server;
     int port;
@@ -39,8 +39,8 @@ int main() {
 
         if (command == "id")
             id = std::stoi(value);
-        else if (command == "pwn")
-            pwn = std::stoi(value);
+        else if (command == "pwm")
+            pwm = std::stoi(value);
         else if (command == "period")
             period = std::stoi(value);
         else if (command == "server")
