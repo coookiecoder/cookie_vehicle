@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <optional>
+#include <iostream>
 
 #include "../class/vehicle.hpp"
 
