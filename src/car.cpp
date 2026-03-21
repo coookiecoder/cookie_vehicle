@@ -56,7 +56,7 @@ int main() {
     std::cout << "server : " << server << std::endl;
     std::cout << "port : " << port << std::endl;
 
-    car.emplace(pwn, period);
+    car.emplace(pwm, period);
 
     cookie::client::udp client(server.c_str(), port);
     client.map_response_word(std::to_string(id), correct_id);
