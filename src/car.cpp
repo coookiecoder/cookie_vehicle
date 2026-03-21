@@ -24,7 +24,7 @@ std::string correct_id(const std::string& message) {
 }
 
 int main() {
-    std::fstream file("/media/mmcblk0p1/vehicle.txt");
+    std::ifstream file("/media/mmcblk0p1/vehicle.txt");
 
     int id;
     int pwm;
