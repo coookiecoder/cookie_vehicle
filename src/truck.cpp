@@ -34,6 +34,8 @@ int main() {
 
     std::string line;
     while (std::getline(file, line)) {
+        line.erase('\r');
+        line.erase('\n');
         std::string command = line.substr(0, line.find('='));
         std::string value = line.substr(line.find('=') + 1);
 
