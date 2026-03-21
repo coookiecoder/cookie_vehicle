@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <optional>
+#include <iostream>
 
 #include "../class/vehicle.hpp"
 
@@ -48,6 +49,12 @@ int main() {
             port = std::stoi(value);
     }
     file.close();
+
+    std::cout << "id : " << id << std::endl;
+    std::cout << "pwm : " << pwm << std::endl;
+    std::cout << "period : " << period << std::endl;
+    std::cout << "server : " << server << std::endl;
+    std::cout << "port : " << port << std::endl;
 
     car.emplace(pwn, period);
 

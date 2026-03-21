@@ -49,6 +49,12 @@ int main() {
     }
     file.close();
 
+    std::cout << "id : " << id << std::endl;
+    std::cout << "pwm : " << pwm << std::endl;
+    std::cout << "period : " << period << std::endl;
+    std::cout << "server : " << server << std::endl;
+    std::cout << "port : " << port << std::endl;
+
     truck.emplace(pwn, period);
 
     cookie::client::udp client(server.c_str(), port);
