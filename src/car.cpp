@@ -3,21 +3,27 @@
 #include <fstream>
 #include <optional>
 #include <iostream>
+#include <sstream>
 
 #include "../class/vehicle.hpp"
 
 std::optional<Vehicle> car;
 
 std::string correct_id(const std::string& message) {
-    std::string command = message.substr(message.find(' ') + 1);
+    std::stringstream ss(message);
+    std::string id, command, value;
 
-    if (command == "speed_up")
-        car->speed_up();
-    else if (command == "slow_down")
-        car->slow_down();
-    else if (command == "start")
+    ss >> id;
+    ss >> command;
+    ss >> value;
+
+    if (command == "set_steering_duty_cycle")
+        car->set_steering_duty_cycle(std::stoi(value));
+    else if (command == "set_speed_duty_cycle")
+        car->set_speed_duty_cycle(std::stoi(value));
+    else if (command == "engine_on")
         car->engine_on();
-    else if (command == "stop")
+    else if (command == "engine_off")
         car->engine_off();
 
     return "";
@@ -34,7 +40,8 @@ int main(int argc, char ** argv) {
         return 1;
 
     int id;
-    int pwm;
+    int speed_pwm;
+    int steering_pwm;
     int period;
     std::string server;
     int port;
@@ -48,8 +55,10 @@ int main(int argc, char ** argv) {
 
         if (command == "id")
             id = std::stoi(value);
-        else if (command == "pwm")
-            pwm = std::stoi(value);
+        else if (command == "speed_pwm")
+            speed_pwm = std::stoi(value);
+        else if (command == "steering_pwm")
+            steering_pwm = std::stoi(value);
         else if (command == "period")
             period = std::stoi(value);
         else if (command == "server")
@@ -60,12 +69,13 @@ int main(int argc, char ** argv) {
     file.close();
 
     std::cout << "id : " << id << std::endl;
-    std::cout << "pwm : " << pwm << std::endl;
+    std::cout << "speed_pwm : " << speed_pwm << std::endl;
+    std::cout << "steering_pwn : " << steering_pwm << std::endl;
     std::cout << "period : " << period << std::endl;
     std::cout << "server : " << server << std::endl;
     std::cout << "port : " << port << std::endl;
 
-    car.emplace(pwm, period);
+    car.emplace(steering_pwm, speed_pwm, period);
 
     cookie::client::udp client(server.c_str(), port);
     client.map_response_word(std::to_string(id), correct_id);
