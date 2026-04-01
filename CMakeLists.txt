@@ -42,7 +42,7 @@ add_custom_target(docker-build
     # 3. Create a temporary container, copy the files, and remove the container
     # We assume your binaries are built in '/app/build' inside the container
     COMMAND docker run --name cookie_temp ${DOCKER_IMAGE_NAME} /bin/true
-    COMMAND docker cp cookie_temp:./build ${OUTPUT_DIR}
+    COMMAND docker cp cookie_temp:./build/. ${OUTPUT_DIR}
     COMMAND docker rm cookie_temp
 
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
