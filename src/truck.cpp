@@ -55,7 +55,7 @@ int main(int argc, char ** argv) {
 
         if (command == "id")
             id = std::stoi(value);
-        else if (command == "speed_pwn")
+        else if (command == "speed_pwm")
             speed_pwm = std::stoi(value);
         else if (command == "steering_pwm")
             steering_pwm = std::stoi(value);

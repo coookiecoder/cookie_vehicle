@@ -1,5 +1,6 @@
 id=1
-pwm=0
+speed_pwm=0
+steering_pwm=1
 period=50000
 server=127.0.0.1
 port=5000
