@@ -23,8 +23,15 @@ std::string correct_id(const std::string& message) {
     return "";
 }
 
-int main() {
-    std::ifstream file("/media/mmcblk0p1/vehicle.txt");
+int main(int argc, char ** argv) {
+    std::ifstream file;
+
+    if (argc == 1)
+        file = std::ifstream("/media/mmcblk0p1/vehicle.txt");
+    else if (argc == 2)
+        file = std::ifstream(argv[1]);
+    else
+        return 1;
 
     int id;
     int pwm;
