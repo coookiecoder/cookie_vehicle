@@ -1,0 +1,5 @@
+id=1
+pwm=0
+period=50000
+server=127.0.0.1
+port=5000
