@@ -5,7 +5,7 @@ build-cookie-template:
   before_script:
     - apk update
     - apk upgrade
-    - apk add cmake make git
+    - apk add cmake make git ncurses-dev
   script:
     - cmake ./ -DCMAKE_BUILD_TYPE=Release -B build
     - cmake --build build
