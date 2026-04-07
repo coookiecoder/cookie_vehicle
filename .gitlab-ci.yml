@@ -8,6 +8,8 @@ build-cookie-template:
     - apk add cmake make git ncurses-dev
   script:
     - cmake ./ -DCMAKE_BUILD_TYPE=Release -B build
+    - cmake --build build --target cookie
+    - cmake --build build --target cookie
     - cmake --build build --target cookie_car
     - cmake --build build --target cookie_truck
     - cmake --build build --target cookie_central
