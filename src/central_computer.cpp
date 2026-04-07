@@ -1,6 +1,7 @@
 #include <server/udp.hpp>
 
 #include <mutex>
+#include <chrono>
 
 #include <ncurses.h>
 
@@ -8,6 +9,7 @@ cookie::server::udp server(5000);
 std::mutex client_mutex;
 
 std::map<uint16_t, std::string> client_types;
+std::map<uint16_t, std::chrono::steady_clock::time_point> client_last_seen;
 
 std::string car_register(std::string message, sockaddr_in client) {
     std::lock_guard<std::mutex> client_lock(client_mutex);
@@ -19,6 +21,7 @@ std::string car_register(std::string message, sockaddr_in client) {
 
     server.client_addresses.push_back(client);
     client_types[client.sin_port] = "CAR";
+    client_last_seen[client.sin_port] = std::chrono::steady_clock::now();
 
     return message;
 }
@@ -33,6 +36,7 @@ std::string truck_register(std::string message, sockaddr_in client) {
 
     server.client_addresses.push_back(client);
     client_types[client.sin_port] = "TRUCK";
+    client_last_seen[client.sin_port] = std::chrono::steady_clock::now();
 
     return message;
 }
@@ -95,8 +99,11 @@ std::string truck_register(std::string message, sockaddr_in client) {
         client_lock.lock();
         int line = 1;
         for (auto client_address : server.client_addresses) {
-            std::string type = client_types[client_address.sin_port];
-            mvwprintw(client_win, line++, 2, "%s ON PORT : %d", type.c_str(), client_address.sin_port);
+            const std::string type = client_types[client_address.sin_port];
+            const long seconds_ago = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - client_last_seen[client_address.sin_port]).count();
+            mvwprintw(client_win, line++, 2, "%s ON PORT : %d, last info : %ld ms", type.c_str(), client_address.sin_port, seconds_ago);
+
+            if (line > 10) break;
         }
         client_lock.unlock();
 
