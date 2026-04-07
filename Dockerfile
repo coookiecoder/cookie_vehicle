@@ -2,7 +2,7 @@ FROM muslcc/x86_64:armv6-linux-musleabihf
 
 RUN apk update
 RUN apk upgrade
-RUN apk add cmake make git
+RUN apk add cmake make git ncurses-dev
 
 COPY ./CMakeLists.txt ./CMakeLists.txt
 COPY ./src ./src
