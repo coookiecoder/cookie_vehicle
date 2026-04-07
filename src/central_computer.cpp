@@ -71,7 +71,7 @@ std::string truck_register(std::string message, sockaddr_in client) {
         wrefresh(control_win);
         wrefresh(client_win);
 
-        auto ch = getch();
+        const int ch = getch();
 
         if (ch == KEY_UP)
             speed = speed + 10;
