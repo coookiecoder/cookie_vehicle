@@ -13,4 +13,6 @@ RUN mkdir /mnt/mmcblk0p1/
 COPY ./vehicle.txt /mnt/mmcblk0p1/vehicle.txt
 
 RUN cmake . -B build
-RUN cmake --build build
+RUN cmake --build build --target cookie_car
+RUN cmake --build build --target cookie_truck
+RUN cmake --build build --target cookie_central

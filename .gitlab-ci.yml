@@ -5,10 +5,12 @@ build-cookie-template:
   before_script:
     - apk update
     - apk upgrade
-    - apk add cmake make git ncurses-dev
+    - apk add cmake make git
   script:
     - cmake ./ -DCMAKE_BUILD_TYPE=Release -B build
-    - cmake --build build
+    - cmake --build build --target cookie_car
+    - cmake --build build --target cookie_truck
+    - cmake --build build --target cookie_central
   artifacts:
     paths:
       - build/cookie_car
