@@ -7,6 +7,8 @@
 cookie::server::udp server(5000);
 std::mutex client_mutex;
 
+std::map<uint16_t, std::string> client_types;
+
 std::string car_register(std::string message, sockaddr_in client) {
     std::lock_guard<std::mutex> client_lock(client_mutex);
     for (const auto & client_address : server.client_addresses) {
@@ -16,6 +18,7 @@ std::string car_register(std::string message, sockaddr_in client) {
     }
 
     server.client_addresses.push_back(client);
+    client_types[client.sin_port] = "CAR";
 
     return message;
 }
@@ -29,6 +32,7 @@ std::string truck_register(std::string message, sockaddr_in client) {
     }
 
     server.client_addresses.push_back(client);
+    client_types[client.sin_port] = "TRUCK";
 
     return message;
 }
@@ -91,7 +95,8 @@ std::string truck_register(std::string message, sockaddr_in client) {
         client_lock.lock();
         int line = 1;
         for (auto client_address : server.client_addresses) {
-            mvwprintw(client_win, line++, 2, "CLIENT ON PORT : %d", client_address.sin_port);
+            std::string type = client_types[client_address.sin_port];
+            mvwprintw(client_win, line++, 2, "%s ON PORT : %d", type.c_str(), client_address.sin_port);
         }
         client_lock.unlock();
 
