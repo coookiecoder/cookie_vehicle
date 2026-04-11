@@ -7,6 +7,7 @@
     - cmake ./ -DCMAKE_BUILD_TYPE=Release -B build -DCMAKE_EXE_LINKER_FLAGS="-static"
     - cmake --build build --target cookie_car
     - cmake --build build --target cookie_truck
+    - cmake --build build --target cookie_central
   artifacts:
     paths:
       - build/cookie_car
