@@ -1,19 +1,27 @@
-image: muslcc/x86_64:armv6-linux-musleabihf
-
-build-cookie-template:
+.build_template:
   stage: build
   before_script:
     - apk update
-    - apk upgrade
     - apk add cmake make git ncurses-dev
   script:
-    - cmake ./ -DCMAKE_BUILD_TYPE=Release -B build
-    - cmake --build build --target cookie
-    - cmake --build build --target cookie
+    - cmake ./ -DCMAKE_BUILD_TYPE=Release -B build -DCMAKE_EXE_LINKER_FLAGS="-static"
     - cmake --build build --target cookie_car
     - cmake --build build --target cookie_truck
-    - cmake --build build --target cookie_central
   artifacts:
     paths:
       - build/cookie_car
       - build/cookie_truck
+
+# Job 1: Build for Raspberry Pi 3/4/5 (64-bit)
+build-aarch64:
+  extends: .build_template
+  image: muslcc/x86_64:aarch64-linux-musl
+  artifacts:
+    name: "cookie-aarch64"
+
+# Job 2: Build for Raspberry Pi Zero/1 (32-bit)
+build-armv6:
+  extends: .build_template
+  image: muslcc/x86_64:armv6-linux-musleabihf
+  artifacts:
+    name: "cookie-armv6"
