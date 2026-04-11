@@ -50,9 +50,26 @@ target_link_libraries(cookie_central_computer PRIVATE ${CURSES_LIBRARIES})
 set(DOCKER_IMAGE_NAME "cookie_vehicle")
 set(OUTPUT_DIR "${CMAKE_BINARY_DIR}/docker_output")
 
-add_custom_target(docker-build
+add_custom_target(docker-build-armv6
     # 1. Build the image
-    COMMAND docker build -t ${DOCKER_IMAGE_NAME} .
+    COMMAND docker build -t ${DOCKER_IMAGE_NAME} -f ./armv6/Dockerfile .
+
+    # 2. Create the output directory on the host if it doesn't exist
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
+
+    # 3. Create a temporary container, copy the files, and remove the container
+    # We assume your binaries are built in '/app/build' inside the container
+    COMMAND docker run --name cookie_temp ${DOCKER_IMAGE_NAME} /bin/true
+    COMMAND docker cp cookie_temp:./build/. ${OUTPUT_DIR}
+    COMMAND docker rm cookie_temp
+
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Building inside docker and extracting artifacts to docker_output"
+)
+
+add_custom_target(docker-build-aarch64
+    # 1. Build the image
+    COMMAND docker build -t ${DOCKER_IMAGE_NAME} -f ./aarch64/Dockerfile .
 
     # 2. Create the output directory on the host if it doesn't exist
     COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
