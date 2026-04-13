@@ -4,6 +4,8 @@ project(cookie_vehicle VERSION 0.0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
+
 message(STATUS "Finding Curses...")
 find_package(Curses REQUIRED)
 
