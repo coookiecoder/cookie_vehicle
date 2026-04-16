@@ -4,13 +4,13 @@ RUN apk update
 RUN apk upgrade
 RUN apk add cmake make git ncurses-dev ncurses-static
 
-COPY ../CMakeLists.txt ./CMakeLists.txt
-COPY ../src ./src
-COPY ../class ./class
+COPY ./CMakeLists.txt ./CMakeLists.txt
+COPY ./src ./src
+COPY ./class ./class
 
 RUN mkdir /mnt/mmcblk0p1/
 
-COPY ../vehicle.txt /mnt/mmcblk0p1/vehicle.txt
+COPY ./vehicle.txt /mnt/mmcblk0p1/vehicle.txt
 
 RUN cmake . -B build
 RUN cmake --build build --target cookie
