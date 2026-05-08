@@ -54,10 +54,10 @@ fn main() -> ! {
     let _gpio_d = _dp.GPIOD.split(&mut rcc);
     let _gpio_e = _dp.GPIOE.split(&mut rcc);
     
-    let (_pwm, (ch1, ch2, _ch3, _ch4)) = _dp.TIM2.pwm_hz(1.kHz(), &mut rcc);
+    let (_pwm, (_ch1, ch2, ch3, _ch4)) = _dp.TIM2.pwm_hz(1.kHz(), &mut rcc);
 
-    let mut steering_pin = ch1.with(_gpio_a.pa0);
-    let mut speed_pin = ch2.with(_gpio_a.pa1);
+    let mut steering_pin = ch2.with(_gpio_a.pa1);
+    let mut speed_pin = ch3.with(_gpio_a.pa2);
 
     steering_pin.enable();
     speed_pin.enable();
@@ -70,16 +70,19 @@ fn main() -> ! {
     let mut spi = SpiSlave::new(_dp.SPI1, (Some(sck), Some(miso), Some(mosi), Some(nss)), SpiMode { polarity: SpiPolarity::IdleLow, phase: SpiPhase::CaptureOnFirstTransition, }, &mut rcc);
 
     let mut speed: u8 = 0;
-    let mut steering: u8 = 0;
+    let mut steering: u8 = 127;
+
+    update_pwm(&mut speed_pin, &speed);
+    update_pwm(&mut steering_pin, &steering);
 
     loop {
-        if let Ok(speed_reading) = nb::block!(spi.read_nonblocking()) {
-            speed = speed_reading;
-        }
+        let mut speed_buf = [0u8; 1];
+        spi.read(&mut speed_buf).ok();
+        speed = speed_buf[0];
 
-        if let Ok(steering_reading) = nb::block!(spi.read_nonblocking()) {
-            steering = steering_reading;
-        }
+        let mut steering_buf = [0u8; 1];
+        spi.read(&mut steering_buf).ok();
+        steering = steering_buf[0];
 
         update_pwm(&mut speed_pin, &speed);
         update_pwm(&mut steering_pin, &steering);
