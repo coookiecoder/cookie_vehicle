@@ -69,27 +69,27 @@ fn main() -> ! {
 
     let mut spi = SpiSlave::new(_dp.SPI1, (Some(sck), Some(miso), Some(mosi), Some(nss)), SpiMode { polarity: SpiPolarity::IdleLow, phase: SpiPhase::CaptureOnFirstTransition, }, &mut rcc);
 
-    let mut speed: u8 = 0;
-    let mut steering: u8 = 127;
+    let mut speed: u16 = 0;
+    let mut steering: u16 = 127;
 
     update_pwm(&mut speed_pin, &speed);
     update_pwm(&mut steering_pin, &steering);
 
     loop {
-        let mut speed_buf = [0u8; 1];
-        spi.read(&mut speed_buf).ok();
-        speed = speed_buf[0];
+        let mut data_from_pi_0 = [0u8; 2];
+        let mut data_to_pi_0 = [0u8; 2];
 
-        let mut steering_buf = [0u8; 1];
-        spi.read(&mut steering_buf).ok();
-        steering = steering_buf[0];
+        spi.transfer(&mut data_from_pi_0, &data_to_pi_0).ok();
+
+        speed = u16::from_be_bytes([data_from_pi_0[0], data_from_pi_0[1]])
+        steering = u16::from_be_bytes([data_from_pi_0[2], data_from_pi_0[3]])
 
         update_pwm(&mut speed_pin, &speed);
         update_pwm(&mut steering_pin, &steering);
     }
 }
 
-fn update_pwm<P: PwmPin<Duty = u16>>(pin: &mut P, value: &u8) {
+fn update_pwm<P: PwmPin<Duty = u16>>(pin: &mut P, value: &u16) {
     let max = pin.get_max_duty();
     let duty = (*value as u32 * max as u32 / 255) as u16;
     pin.set_duty(duty);
