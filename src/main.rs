@@ -81,8 +81,8 @@ fn main() -> ! {
 
         spi.transfer(&mut data_from_pi_0, &data_to_pi_0).ok();
 
-        speed = u16::from_be_bytes([data_from_pi_0[0], data_from_pi_0[1]])
-        steering = u16::from_be_bytes([data_from_pi_0[2], data_from_pi_0[3]])
+        speed = u16::from_be_bytes([data_from_pi_0[0], data_from_pi_0[1]]);
+        steering = u16::from_be_bytes([data_from_pi_0[2], data_from_pi_0[3]]);
 
         update_pwm(&mut speed_pin, &speed);
         update_pwm(&mut steering_pin, &steering);
