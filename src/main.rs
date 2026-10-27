@@ -76,8 +76,8 @@ fn main() -> ! {
     update_pwm(&mut steering_pin, &steering);
 
     loop {
-        let mut data_from_pi_0 = [0u8; 2];
-        let mut data_to_pi_0 = [0u8; 2];
+        let mut data_from_pi_0 = [0u8; 4];
+        let mut data_to_pi_0 = [0u8; 4];
 
         spi.transfer(&mut data_from_pi_0, &data_to_pi_0).ok();
 
